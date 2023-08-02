@@ -5,7 +5,7 @@ Mock location checker for ionic capacitor
 ## Install
 
 ```bash
-npm install capacitor-mock-location-checker
+npm install github:aisarnazmi/capacitor-mock-location-checker
 npx cap sync
 ```
 
