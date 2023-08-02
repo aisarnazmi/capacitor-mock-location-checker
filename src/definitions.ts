@@ -1,3 +1,7 @@
 export interface CapacitorMockLocationCheckerPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  isLocationFromMockProvider(): Promise<CheckMockResult>;
+}
+
+export interface CheckMockResult {
+  isMock: boolean;
 }

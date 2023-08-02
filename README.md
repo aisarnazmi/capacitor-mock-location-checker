@@ -11,9 +11,34 @@ npx cap sync
 
 ## API
 
-<docgen-index></docgen-index>
+<docgen-index>
+
+* [`isLocationFromMockProvider()`](#islocationfrommockprovider)
+* [Interfaces](#interfaces)
+
+</docgen-index>
 
 <docgen-api>
-<!-- run docgen to generate docs from the source -->
-<!-- More info: https://github.com/ionic-team/capacitor-docgen -->
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### isLocationFromMockProvider()
+
+```typescript
+isLocationFromMockProvider() => Promise<CheckMockResult>
+```
+
+**Returns:** <code>Promise&lt;<a href="#checkmockresult">CheckMockResult</a>&gt;</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### CheckMockResult
+
+| Prop         | Type                 |
+| ------------ | -------------------- |
+| **`isMock`** | <code>boolean</code> |
+
 </docgen-api>

@@ -1,10 +1,9 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { CapacitorMockLocationCheckerPlugin } from './definitions';
+import type { CapacitorMockLocationCheckerPlugin, CheckMockResult } from './definitions';
 
 export class CapacitorMockLocationCheckerWeb extends WebPlugin implements CapacitorMockLocationCheckerPlugin {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  async isLocationFromMockProvider(): Promise<CheckMockResult> {
+    throw new Error('Method not implemented.');
   }
 }
