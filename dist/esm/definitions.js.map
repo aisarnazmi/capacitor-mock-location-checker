@@ -1,0 +1,1 @@
+{"version":3,"file":"definitions.js","sourceRoot":"","sources":["../../src/definitions.ts"],"names":[],"mappings":"","sourcesContent":["export interface CapacitorMockLocationCheckerPlugin {\n  isLocationFromMockProvider(): Promise<CheckMockResult>;\n}\n\nexport interface CheckMockResult {\n  isMock: boolean;\n}\n"]}

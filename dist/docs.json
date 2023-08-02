@@ -1,0 +1,44 @@
+{
+  "api": {
+    "name": "CapacitorMockLocationCheckerPlugin",
+    "slug": "capacitormocklocationcheckerplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "isLocationFromMockProvider",
+        "signature": "() => Promise<CheckMockResult>",
+        "parameters": [],
+        "returns": "Promise<CheckMockResult>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "CheckMockResult"
+        ],
+        "slug": "islocationfrommockprovider"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "CheckMockResult",
+      "slug": "checkmockresult",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "isMock",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
