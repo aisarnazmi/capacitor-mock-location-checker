@@ -18,20 +18,18 @@ const val TAG: String = "MockLocationChecker"
 
 class CapacitorMockLocationChecker {
 	private lateinit var mFusedLocationClient: FusedLocationProviderClient
-	
+
 	@SuppressLint("ObsoleteSdkInt")
 	fun isLocationFromMockProvider(activity: Activity, callback: LocationCallbackListener) {
-		val maxReading = 3; // How many times for location reading to ensure accuracy
-		var locationCallbackCompleted = false
-		var counter = 0
-		
 		mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
-		val locationRequest = LocationRequest.create().apply {
-			interval = 1000
-			fastestInterval = 500
-			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-		}
+		val maxReading = 3
+		var counter = 1
+
+		val locationRequest = LocationRequest.Builder(300)
+			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+			.setMaxUpdates(maxReading)
+			.build()
 
 		val locationCallback = object : LocationCallback() {
 			override fun onLocationResult(locationResult: LocationResult) {
@@ -44,18 +42,16 @@ class CapacitorMockLocationChecker {
 						} else {
 							false
 						}
+            Log.i(TAG, "isMock: $isFromMockProvider")
 
-						Log.i(TAG, "Check Mock: $isFromMockProvider")
-						
-						if (isFromMockProvider || counter > maxReading) {
-							locationCallbackCompleted = true
-							callback.onLocationCallbackCompleted(isFromMockProvider)
-							mFusedLocationClient.removeLocationUpdates(this)
-						}
-
-						counter++
+            if (isFromMockProvider || counter >= maxReading) {
+              callback.onLocationCallbackCompleted(isFromMockProvider)
+              mFusedLocationClient.removeLocationUpdates(this)
+            } else {
+              counter++
+            }
 					} catch (e: Exception) {
-						Log.e("MockLocationChecker", e.toString())
+						Log.e(TAG, e.toString())
 					}
 				}
 			}
@@ -65,7 +61,7 @@ class CapacitorMockLocationChecker {
 			if (ActivityCompat.checkSelfPermission(
 				activity.applicationContext,
 				Manifest.permission.ACCESS_FINE_LOCATION
-				) != PackageManager.PERMISSION_GRANTED && 
+				) != PackageManager.PERMISSION_GRANTED &&
 				ActivityCompat.checkSelfPermission(
 				activity.applicationContext,
 				Manifest.permission.ACCESS_COARSE_LOCATION
