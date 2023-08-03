@@ -23,7 +23,9 @@ class CapacitorMockLocationChecker {
 	fun isLocationFromMockProvider(activity: Activity, callback: LocationCallbackListener) {
 		var locationCallbackCompleted = false
 		var counter = 0
+		
 		mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+
 		val locationRequest = LocationRequest.create().apply {
 			interval = 1000
 			fastestInterval = 500
@@ -31,51 +33,55 @@ class CapacitorMockLocationChecker {
 		}
 
 		val locationCallback = object : LocationCallback() {
-		override fun onLocationResult(locationResult: LocationResult) {
-			locationResult.lastLocation?.let { location ->
-			try {
-				val isFromMockProvider = if (Build.VERSION.SDK_INT <= 30) {
-				location.isFromMockProvider
-				} else if (Build.VERSION.SDK_INT >= 31) {
-				location.isMock
-				} else {
-				false
+			override fun onLocationResult(locationResult: LocationResult) {
+				locationResult.lastLocation?.let { location ->
+					try {
+						val isFromMockProvider = if (Build.VERSION.SDK_INT <= 30) {
+							location.isFromMockProvider
+						} else if (Build.VERSION.SDK_INT >= 31) {
+							location.isMock
+						} else {
+							false
+						}
+
+						Log.i(TAG, "Check Mock: $isFromMockProvider")
+						
+						// Check for mock at least 3 times to ensure accurate reading
+						if (isFromMockProvider || counter >= 3) {
+							locationCallbackCompleted = true
+							callback.onLocationCallbackCompleted(isFromMockProvider)
+							mFusedLocationClient.removeLocationUpdates(this)
+						}
+
+						counter++
+					} catch (e: Exception) {
+						Log.e("MockLocationChecker", e.toString())
+					}
 				}
-				Log.i(TAG, "Check Mock: $isFromMockProvider")
-				if (isFromMockProvider || counter >= 3) {
-				locationCallbackCompleted = true
-				callback.onLocationCallbackCompleted(isFromMockProvider)
-				mFusedLocationClient.removeLocationUpdates(this)
-				}
-				counter++
-			} catch (e: Exception) {
-				Log.e("MockLocationChecker", e.toString())
 			}
-			}
-		}
 		}
 
-		// Request location updates
 		if (Build.VERSION.SDK_INT >= 18) {
-		if (ActivityCompat.checkSelfPermission(
-			activity.applicationContext,
-			Manifest.permission.ACCESS_FINE_LOCATION
-			) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-			activity.applicationContext,
-			Manifest.permission.ACCESS_COARSE_LOCATION
-			) != PackageManager.PERMISSION_GRANTED
-		) {
-			callback.onLocationCallbackCompleted(false)
-			return
-		}
-		mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+			if (ActivityCompat.checkSelfPermission(
+				activity.applicationContext,
+				Manifest.permission.ACCESS_FINE_LOCATION
+				) != PackageManager.PERMISSION_GRANTED && 
+				ActivityCompat.checkSelfPermission(
+				activity.applicationContext,
+				Manifest.permission.ACCESS_COARSE_LOCATION
+				) != PackageManager.PERMISSION_GRANTED
+			) {
+				callback.onLocationCallbackCompleted(false)
+				return
+			}
+			mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
 		} else {
-		callback.onLocationCallbackCompleted(
-			Settings.Secure.getString(
-			activity.applicationContext.contentResolver,
-			Settings.Secure.ALLOW_MOCK_LOCATION
-			) != "0"
-		)
+			callback.onLocationCallbackCompleted(
+				Settings.Secure.getString(
+				activity.applicationContext.contentResolver,
+				Settings.Secure.ALLOW_MOCK_LOCATION
+				) != "0"
+			)
 		}
 	}
 
