@@ -21,7 +21,7 @@ class CapacitorMockLocationChecker {
 	
 	@SuppressLint("ObsoleteSdkInt")
 	fun isLocationFromMockProvider(activity: Activity, callback: LocationCallbackListener) {
-		const val MAX_READING = 3; // How many times for location reading to ensure accuracy
+		val maxReading = 3; // How many times for location reading to ensure accuracy
 		var locationCallbackCompleted = false
 		var counter = 0
 		
@@ -47,7 +47,7 @@ class CapacitorMockLocationChecker {
 
 						Log.i(TAG, "Check Mock: $isFromMockProvider")
 						
-						if (isFromMockProvider || counter >= MAX_READING) {
+						if (isFromMockProvider || counter > maxReading) {
 							locationCallbackCompleted = true
 							callback.onLocationCallbackCompleted(isFromMockProvider)
 							mFusedLocationClient.removeLocationUpdates(this)
